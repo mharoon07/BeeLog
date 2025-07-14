@@ -1,14 +1,13 @@
- 
+
 import { NextResponse } from 'next/server';
 import connectDb from '../../../../lib/db';
 import BlogModel from "../../../../schema/BlogSchema"
 
 export async function GET(request, { params }) {
     try {
-        await connectDb(); // Connect to your database
+        await connectDb();
 
-        const { id } = params; // Destructure params (safe in async function)
-
+        const { id } = await params;
         if (!id) {
             return NextResponse.json(
                 { message: 'Blog ID is required' },

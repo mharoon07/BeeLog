@@ -11,6 +11,8 @@ import {
   Tag,
   ArrowRight,
   TrendingUp,
+  Menu, // Added for mobile menu
+  X, // Added for mobile menu close icon
 } from "lucide-react";
 
 export default function BlogPage() {
@@ -22,6 +24,7 @@ export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // New state for mobile menu
 
   const categories = [
     "All",
@@ -98,6 +101,10 @@ export default function BlogPage() {
     setDarkMode(!darkMode);
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -153,6 +160,8 @@ export default function BlogPage() {
                 BlogSpace
               </span>
             </Link>
+
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <Link
                 href="/"
@@ -170,8 +179,9 @@ export default function BlogPage() {
               >
                 Write
               </Link>
-              
             </div>
+
+            {/* Search and Dark Mode Toggle */}
             <div className="flex items-center space-x-4">
               <div className="relative hidden sm:block">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-300 w-4 h-4" />
@@ -197,9 +207,68 @@ export default function BlogPage() {
                   <Moon className="w-5 h-5 text-gray-600" />
                 )}
               </button>
+              {/* Mobile Menu Button */}
+              <div className="md:hidden">
+                <button
+                  onClick={toggleMobileMenu}
+                  className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                >
+                  {isMobileMenuOpen ? (
+                    <X className="w-5 h-5 text-gray-600 dark:text-gray-200" />
+                  ) : (
+                    <Menu className="w-5 h-5 text-gray-600 dark:text-gray-200" />
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <div
+            className={`${
+              darkMode
+                ? "bg-gray-900 border-gray-800"
+                : "bg-white border-gray-200"
+            } md:hidden border-t py-4`}
+          >
+            <div className="px-4 sm:px-6">
+              <div className="relative mb-4">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-300 w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="Search articles..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className={`pl-10 pr-4 py-2 w-full rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
+                    darkMode
+                      ? "bg-gray-800 border-gray-700 text-gray-200 placeholder-gray-500"
+                      : "bg-white border-gray-200 text-gray-900 placeholder-gray-400"
+                  }`}
+                />
+              </div>
+              <Link
+                href="/"
+                className={`block px-4 py-2 rounded-md text-base font-medium ${
+                  darkMode ? "text-gray-200" : "text-gray-700"
+                } hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-teal-500 dark:hover:text-teal-400 transition-colors`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                href="/post/create"
+                className={`block px-4 py-2 rounded-md text-base font-medium ${
+                  darkMode ? "text-gray-200" : "text-gray-700"
+                } hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-teal-500 dark:hover:text-teal-400 transition-colors`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Write
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -216,27 +285,37 @@ export default function BlogPage() {
                   priority
                 />
               </div>
-              <div className="relative p-8 md:p-12 lg:p-16">
+              <div className="relative p-6 md:p-12 lg:p-16">
+                {" "}
+                {/* Adjusted padding for mobile */}
                 <div className="max-w-3xl">
                   <div className="flex items-center space-x-4 mb-4">
                     <span className="px-3 py-1 bg-amber-400 text-white text-sm font-medium rounded-full">
                       Featured
                     </span>
-                    <span className="text-teal-100">
+                    <span className="text-teal-100 text-sm md:text-base">
+                      {" "}
+                      {/* Adjusted text size */}
                       {featuredPost.category || "Uncategorized"}
                     </span>
                   </div>
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-playfair mb-4 leading-tight">
+                  <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold font-playfair mb-4 leading-tight">
+                    {" "}
+                    {/* Adjusted text size */}
                     {featuredPost.title}
                   </h1>
                   <div
-                    className="text-lg md:text-xl text-teal-100 mb-6 leading-relaxed"
+                    className="text-base md:text-xl text-teal-100 mb-6 leading-relaxed" // Adjusted text size
                     dangerouslySetInnerHTML={{
                       __html: getExcerpt(featuredPost.content, 200),
                     }}
                   />
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-teal-100">
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
+                    {" "}
+                    {/* Flex direction change for mobile */}
+                    <div className="flex items-center space-x-4 text-teal-100 text-sm md:text-base">
+                      {" "}
+                      {/* Adjusted text size */}
                       <div className="flex items-center space-x-2">
                         <User className="w-4 h-4" />
                         <span>{featuredPost.author}</span>
@@ -248,7 +327,7 @@ export default function BlogPage() {
                     </div>
                     <Link
                       href={`/post/${featuredPost._id}`}
-                      className="inline-flex items-center px-6 py-3 bg-white text-teal-600 dark:text-teal-500 font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 transition-colors"
+                      className="inline-flex items-center px-4 py-2 md:px-6 md:py-3 bg-white text-teal-600 dark:text-teal-500 font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 transition-colors text-sm md:text-base" // Adjusted padding and text size
                     >
                       Read More
                       <ArrowRight className="w-4 h-4 ml-2" />
@@ -261,7 +340,9 @@ export default function BlogPage() {
         )}
 
         <section className="mb-8">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 space-y-4 sm:space-y-0">
+            {" "}
+            {/* Flex direction for smaller screens */}
             <h2
               className={`text-2xl font-bold font-playfair ${
                 darkMode ? "text-gray-100" : "text-gray-900"
@@ -276,12 +357,15 @@ export default function BlogPage() {
               </span>
             </div>
           </div>
-          <div className="flex flex-wrap gap-3 mb-8">
+          <div className="flex flex-wrap gap-2 sm:gap-3 mb-8 justify-center sm:justify-start">
+            {" "}
+            {/* Adjusted gap and justified for centering on small screens */}
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full font-medium transition-all duration-200 ${
+                className={`px-3 py-1 text-sm sm:px-4 sm:py-2 rounded-full font-medium transition-all duration-200 ${
+                  /* Adjusted padding and text size */
                   selectedCategory === category
                     ? "bg-teal-500 text-white"
                     : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-teal-100 dark:hover:bg-teal-800 hover:text-teal-500 dark:hover:text-teal-400"
@@ -364,7 +448,9 @@ export default function BlogPage() {
                           __html: getExcerpt(post.content),
                         }}
                       />
-                      <div className="flex items-center justify-between text-sm mb-4">
+                      <div className="flex flex-wrap items-center justify-between text-sm mb-4 gap-2">
+                        {" "}
+                        {/* Added flex-wrap and gap for tags */}
                         <div className="flex items-center space-x-2">
                           <User className="w-4 h-4 text-gray-400 dark:text-gray-300" />
                           <span
@@ -421,7 +507,9 @@ export default function BlogPage() {
           )}
 
           {!loading && regularPosts.length > postsPerPage && (
-            <div className="flex justify-center mt-8 space-x-2">
+            <div className="flex justify-center mt-8 space-x-2 flex-wrap gap-2">
+              {" "}
+              {/* Added flex-wrap and gap */}
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
                   key={i}
@@ -446,14 +534,16 @@ export default function BlogPage() {
         >
           <div className="text-center max-w-2xl mx-auto">
             <h2
-              className={`text-3xl font-bold font-playfair ${
+              className={`text-2xl md:text-3xl font-bold font-playfair ${
+                /* Adjusted text size */
                 darkMode ? "text-gray-100" : "text-gray-900"
               } mb-4`}
             >
               Stay Updated
             </h2>
             <p
-              className={`text-lg ${
+              className={`text-base md:text-lg ${
+                /* Adjusted text size */
                 darkMode ? "text-gray-300" : "text-gray-600"
               } mb-8`}
             >
@@ -485,8 +575,15 @@ export default function BlogPage() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="col-span-1 md:col-span-2">
-              <Link href="/" className="flex items-center space-x-2 mb-4">
+            <div className="col-span-1 md:col-span-2 text-center md:text-left">
+              {" "}
+              {/* Centered text on mobile */}
+              <Link
+                href="/"
+                className="flex items-center space-x-2 mb-4 justify-center md:justify-start"
+              >
+                {" "}
+                {/* Centered on mobile */}
                 <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">B</span>
                 </div>
@@ -497,13 +594,13 @@ export default function BlogPage() {
               <p
                 className={`text-base ${
                   darkMode ? "text-gray-300" : "text-gray-600"
-                } mb-4 max-w-md`}
+                } mb-4 max-w-md mx-auto md:mx-0`}
               >
                 A modern platform for sharing ideas, insights, and stories.
                 Built for writers who value clean aesthetics and powerful
                 functionality.
               </p>
-              <div className="flex space-x-4">
+              <div className="flex space-x-4 justify-center md:justify-start">
                 <a
                   href="#"
                   className="text-gray-400 dark:text-gray-300 hover:text-teal-500 dark:hover:text-teal-400 transition-colors"
@@ -545,7 +642,9 @@ export default function BlogPage() {
                 </a>
               </div>
             </div>
-            <div>
+            <div className="text-center md:text-left">
+              {" "}
+              {/* Centered text on mobile */}
               <h3
                 className={`text-lg font-semibold ${
                   darkMode ? "text-gray-100" : "text-gray-900"
@@ -596,7 +695,9 @@ export default function BlogPage() {
                 </li>
               </ul>
             </div>
-            <div>
+            <div className="text-center md:text-left">
+              {" "}
+              {/* Centered text on mobile */}
               <h3
                 className={`text-lg font-semibold ${
                   darkMode ? "text-gray-100" : "text-gray-900"
@@ -625,7 +726,7 @@ export default function BlogPage() {
           <div
             className={`border-t ${
               darkMode ? "border-gray-800" : "border-gray-200"
-            } mt-8 pt-8 flex flex-col md:flex-row justify-between items-center`}
+            } mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left space-y-4 md:space-y-0`}
           >
             <p
               className={`text-sm ${
@@ -634,7 +735,9 @@ export default function BlogPage() {
             >
               © 2024 BlogSpace. All rights reserved.
             </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
+            <div className="flex space-x-6 flex-wrap justify-center gap-y-2">
+              {" "}
+              {/* Added flex-wrap and gap-y for small screens */}
               <a
                 href="#"
                 className={`text-sm ${

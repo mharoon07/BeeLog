@@ -16,7 +16,6 @@ import {
   Calendar,
   User,
   Tag,
-  Share2,
   Trash,
 } from "lucide-react";
 import { toast, Toaster } from "react-hot-toast";
@@ -102,24 +101,22 @@ export default function SingleBlogPage({ params: paramsPromise }) {
       }
     });
   };
+
   const DeleteBlogs = async () => {
     try {
       setLoading(true);
-
       const response = await fetch(`/api/Delete/${params.id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
       });
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
           errorData.error || `HTTP error! status: ${response.status}`
         );
       }
-
       const data = await response.json();
       console.log(data.message);
       router.push("/");
@@ -129,6 +126,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
       setLoading(false);
     }
   };
+
   const fetchBlog = useCallback(async () => {
     setLoading(true);
     try {
@@ -140,7 +138,6 @@ export default function SingleBlogPage({ params: paramsPromise }) {
       }
       const data = await response.json();
       setPost(data);
-
       setEditedPost({ ...data, tags: data.tags || [] });
     } catch (error) {
       console.error("Error fetching blog post:", error);
@@ -239,7 +236,6 @@ export default function SingleBlogPage({ params: paramsPromise }) {
 
       const updatedPostData = await response.json();
       setPost({ id: updatedPostData._id, ...updatedPostData });
-
       setEditedPost({
         id: updatedPostData._id,
         ...updatedPostData,
@@ -363,37 +359,37 @@ export default function SingleBlogPage({ params: paramsPromise }) {
 
     htmlContent = htmlContent.replace(
       /^###### (.*$)/gim,
-      `<h6 class="text-lg font-bold font-playfair mb-2 mt-4 ${
+      `<h6 class="text-base sm:text-lg font-bold font-playfair mb-2 mt-4 ${
         darkMode ? "text-white" : "text-gray-900"
       }">$1</h6>`
     );
     htmlContent = htmlContent.replace(
       /^##### (.*$)/gim,
-      `<h5 class="text-xl font-bold font-playfair mb-2 mt-5 ${
+      `<h5 class="text-lg sm:text-xl font-bold font-playfair mb-2 mt-5 ${
         darkMode ? "text-white" : "text-gray-900"
       }">$1</h5>`
     );
     htmlContent = htmlContent.replace(
       /^#### (.*$)/gim,
-      `<h4 class="text-2xl font-bold font-playfair mb-3 mt-6 ${
+      `<h4 class="text-xl sm:text-2xl font-bold font-playfair mb-3 mt-6 ${
         darkMode ? "text-white" : "text-gray-900"
       }">$1</h4>`
     );
     htmlContent = htmlContent.replace(
       /^### (.*$)/gim,
-      `<h3 class="text-3xl font-bold font-playfair mb-3 mt-6 ${
+      `<h3 class="text-2xl sm:text-3xl font-bold font-playfair mb-3 mt-6 ${
         darkMode ? "text-white" : "text-gray-900"
       }">$1</h3>`
     );
     htmlContent = htmlContent.replace(
       /^## (.*$)/gim,
-      `<h2 class="text-4xl font-bold font-playfair mb-4 mt-8 ${
+      `<h2 class="text-3xl sm:text-4xl font-bold font-playfair mb-4 mt-8 ${
         darkMode ? "text-white" : "text-gray-900"
       }">$1</h2>`
     );
     htmlContent = htmlContent.replace(
       /^# (.*$)/gim,
-      `<h1 class="text-5xl font-extrabold font-playfair mb-6 ${
+      `<h1 class="text-4xl sm:text-5xl font-extrabold font-playfair mb-6 ${
         darkMode ? "text-white" : "text-gray-900"
       }">$1</h1>`
     );
@@ -426,14 +422,14 @@ export default function SingleBlogPage({ params: paramsPromise }) {
 
     htmlContent = htmlContent.replace(
       /\n\n/g,
-      `</p><p class="mb-6 leading-relaxed ${
+      `</p><p class="mb-4 sm:mb-6 leading-relaxed ${
         darkMode ? "text-gray-300" : "text-gray-700"
-      } text-lg">`
+      } text-base sm:text-lg">`
     );
 
-    htmlContent = `<p class="mb-6 leading-relaxed ${
+    htmlContent = `<p class="mb-4 sm:mb-6 leading-relaxed ${
       darkMode ? "text-gray-300" : "text-gray-700"
-    } text-lg">${htmlContent}</p>`;
+    } text-base sm:text-lg">${htmlContent}</p>`;
 
     htmlContent = htmlContent.replace(/<p[^>]*><\/p>/g, "");
 
@@ -441,8 +437,9 @@ export default function SingleBlogPage({ params: paramsPromise }) {
   };
 
   const joditConfig = {
-    height: 600,
-    toolbarAdaptive: false,
+    height: "auto",
+    minHeight: 400,
+    toolbarAdaptive: true,
     buttons: [
       "bold",
       "italic",
@@ -490,9 +487,9 @@ export default function SingleBlogPage({ params: paramsPromise }) {
           darkMode ? "dark bg-gray-900" : "bg-white"
         }`}
       >
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-teal-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-t-4 border-b-4 border-teal-500"></div>
         <p
-          className={`ml-4 text-lg ${
+          className={`ml-4 text-base sm:text-lg ${
             darkMode ? "text-gray-300" : "text-gray-700"
           }`}
         >
@@ -509,27 +506,31 @@ export default function SingleBlogPage({ params: paramsPromise }) {
           darkMode ? "dark bg-gray-900" : "bg-white"
         }`}
       >
-        <div className="text-center p-8 rounded-lg shadow-lg max-w-md w-full">
+        <div className="text-center p-6 sm:p-8 rounded-lg shadow-lg max-w-md w-full">
           <h1
-            className={`text-3xl font-bold mb-4 ${
+            className={`text-2xl sm:text-3xl font-bold mb-4 ${
               darkMode ? "text-white" : "text-gray-900"
             }`}
           >
             Blog Post Not Found
           </h1>
-          <p className={`mb-6 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+          <p
+            className={`mb-6 text-sm sm:text-base ${
+              darkMode ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
             The blog post you are looking for does not exist or has been
             removed.
           </p>
           <Link
             href="/"
-            className={`inline-flex items-center px-6 py-3 rounded-lg text-lg font-medium transition-all duration-300 transform hover:scale-105 ${
+            className={`inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-lg font-medium transition-all duration-300 transform hover:scale-105 ${
               darkMode
                 ? "bg-teal-600 text-white hover:bg-teal-700"
                 : "bg-teal-600 text-white hover:bg-teal-700"
             }`}
           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
             Return to Blog
           </Link>
         </div>
@@ -553,109 +554,25 @@ export default function SingleBlogPage({ params: paramsPromise }) {
         } backdrop-blur-sm border-b shadow-sm`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-4 sm:h-16">
+            <div className="flex items-center justify-between w-full sm:w-auto">
               <Link href="/" className="flex items-center space-x-2 group">
-                <div className="w-9 h-9 bg-teal-600 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:rotate-6">
-                  <span className="text-white font-extrabold text-xl">B</span>
+                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-teal-600 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:rotate-6">
+                  <span className="text-white font-extrabold text-lg sm:text-xl">
+                    B
+                  </span>
                 </div>
                 <span
-                  className={`text-2xl font-bold font-playfair ${
+                  className={`text-xl sm:text-2xl font-bold font-playfair ${
                     darkMode ? "text-teal-400" : "text-teal-600"
                   } transition-colors duration-200`}
                 >
                   BlogSpace
                 </span>
               </Link>
-              <Link
-                href="/"
-                className={`hidden md:flex items-center px-4 py-2 rounded-lg ${
-                  darkMode
-                    ? "text-gray-400 hover:text-teal-400"
-                    : "text-gray-600 hover:text-teal-600"
-                } transition-colors duration-200`}
-              >
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                Back to Blog
-              </Link>
-            </div>
-            <div className="flex items-center space-x-3">
-              {isEditing && (
-                <>
-                  <button
-                    onClick={() => setIsPreview(!isPreview)}
-                    className={`flex items-center px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${
-                      isPreview
-                        ? "bg-gold-100 text-gold-700 dark:bg-gold-900/20 dark:text-gold-400"
-                        : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-                    } hover:bg-gold-200 dark:hover:bg-gold-900/30`}
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    {isPreview ? "Edit" : "Preview"}
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    className="flex items-center px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-all duration-200 transform hover:scale-105 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={isUploading}
-                  >
-                    {isUploading ? (
-                      <span className="flex items-center">
-                        <span className="animate-spin rounded-full h-4 w-4 border-t-2 border-white mr-2"></span>
-                        Saving...
-                      </span>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4 mr-2" />
-                        Save
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={handleCancel}
-                    className="flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-all duration-200 text-sm font-medium"
-                  >
-                    <X className="w-4 h-4 mr-2" />
-                    Cancel
-                  </button>
-                </>
-              )}
-              {!isEditing && (
-                <>
-                  {/* <button
-                    className={`flex items-center px-4 py-2 ${
-                      darkMode
-                        ? "bg-gray-800 hover:bg-gray-700 text-gray-300"
-                        : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                    } rounded-lg transition-all duration-200 text-sm font-medium`}
-                    onClick={DeleteBlogs()}
-                  >
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Share
-                  </button> */}
-                  <button
-                    className={`flex items-center px-4 py-2 ${
-                      darkMode
-                        ? "bg-red-800 hover:bg-red-700 text-gray-300"
-                        : "bg-red-100 hover:bg-red-200 text-red-700"
-                    } rounded-lg transition-all duration-200 text-sm font-medium`}
-                    onClick={DeleteBlogs}
-                  >
-                    <Trash className="w-4 h-4 mr-2" />
-                    Delete
-                  </button>
-
-                  <button
-                    onClick={handleEdit}
-                    className="flex items-center px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-all duration-200 transform hover:scale-105 text-sm font-medium"
-                  >
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit
-                  </button>
-                </>
-              )}
               <button
                 onClick={toggleDarkMode}
-                className={`p-2 rounded-lg ${
+                className={`p-2 rounded-lg sm:hidden ${
                   darkMode
                     ? "bg-gray-800 hover:bg-gray-700 text-white"
                     : "bg-gray-100 hover:bg-gray-200 text-gray-700"
@@ -669,24 +586,113 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                 )}
               </button>
             </div>
+            <div className="flex items-center space-x-2 sm:space-x-3 mt-3 sm:mt-0">
+              <Link
+                href="/"
+                className={`flex items-center px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base ${
+                  darkMode
+                    ? "text-gray-400 hover:text-teal-400"
+                    : "text-gray-600 hover:text-teal-600"
+                } transition-colors duration-200`}
+              >
+                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                Back
+              </Link>
+              {isEditing && (
+                <>
+                  <button
+                    onClick={() => setIsPreview(!isPreview)}
+                    className={`flex items-center px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium ${
+                      isPreview
+                        ? "bg-gold-100 text-gold-700 dark:bg-gold-900/20 dark:text-gold-400"
+                        : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                    } hover:bg-gold-200 dark:hover:bg-gold-900/30`}
+                  >
+                    <Eye className="w-4 h-4 mr-1 sm:mr-2" />
+                    {isPreview ? "Edit" : "Preview"}
+                  </button>
+                  <button
+                    onClick={handleSave}
+                    className="flex items-center px-3 sm:px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-all duration-200 transform hover:scale-105 text-xs sm:text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isUploading}
+                  >
+                    {isUploading ? (
+                      <span className="flex items-center">
+                        <span className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-t-2 border-white mr-1 sm:mr-2"></span>
+                        Saving...
+                      </span>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-1 sm:mr-2" />
+                        Save
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    className="flex items-center px-3 sm:px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium"
+                  >
+                    <X className="w-4 h-4 mr-1 sm:mr-2" />
+                    Cancel
+                  </button>
+                </>
+              )}
+              {!isEditing && (
+                <>
+                  <button
+                    className={`flex items-center px-3 sm:px-4 py-2 ${
+                      darkMode
+                        ? "bg-red-800 hover:bg-red-700 text-gray-300"
+                        : "bg-red-100 hover:bg-red-200 text-red-700"
+                    } rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium`}
+                    onClick={DeleteBlogs}
+                  >
+                    <Trash className="w-4 h-4 mr-1 sm:mr-2" />
+                    Delete
+                  </button>
+                  <button
+                    onClick={handleEdit}
+                    className="flex items-center px-3 sm:px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-all duration-200 transform hover:scale-105 text-xs sm:text-sm font-medium"
+                  >
+                    <Edit className="w-4 h-4 mr-1 sm:mr-2" />
+                    Edit
+                  </button>
+                  <button
+                    onClick={toggleDarkMode}
+                    className={`p-2 rounded-lg hidden sm:block ${
+                      darkMode
+                        ? "bg-gray-800 hover:bg-gray-700 text-white"
+                        : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                    } transition-colors`}
+                    aria-label="Toggle dark mode"
+                  >
+                    {darkMode ? (
+                      <Sun className="w-5 h-5" />
+                    ) : (
+                      <Moon className="w-5 h-5" />
+                    )}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         {isEditing && !isPreview ? (
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <section>
               <label
                 htmlFor="hero-image-upload"
-                className={`block text-lg font-semibold mb-3 ${
+                className={`block text-base sm:text-lg font-semibold mb-2 sm:mb-3 ${
                   darkMode ? "text-gray-200" : "text-gray-800"
                 }`}
               >
                 Hero Image
               </label>
               <div
-                className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
+                className={`relative border-2 border-dashed rounded-xl p-6 sm:p-8 text-center transition-all duration-200 ${
                   dragActive
                     ? "border-teal-500 bg-teal-50 dark:bg-teal-900/20"
                     : `border-gray-300 dark:border-gray-700 hover:border-teal-400 ${
@@ -705,7 +711,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                       alt="Preview"
                       width={800}
                       height={400}
-                      className="w-full h-64 object-cover rounded-lg shadow-md"
+                      className="w-full h-48 sm:h-64 object-cover rounded-lg shadow-md"
                       priority
                     />
                     <button
@@ -714,21 +720,21 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                         setSelectedFile(null);
                         toast.success("Image removed.");
                       }}
-                      className="absolute top-3 right-3 p-2 bg-red-600 hover:bg-red-700 text-white rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100 transform scale-0 group-hover:scale-100"
+                      className="absolute top-2 right-2 sm:top-3 sm:right-3 p-1.5 sm:p-2 bg-red-600 hover:bg-red-700 text-white rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100 transform scale-0 group-hover:scale-100"
                       aria-label="Remove image"
                     >
-                      <X className="w-5 h-5" />
+                      <X className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                   </div>
                 ) : (
                   <div>
                     <Upload
-                      className={`w-14 h-14 mx-auto mb-4 ${
+                      className={`w-10 h-10 sm:w-14 sm:h-14 mx-auto mb-3 sm:mb-4 ${
                         darkMode ? "text-gray-500" : "text-gray-400"
                       }`}
                     />
                     <p
-                      className={`text-lg font-medium mb-2 ${
+                      className={`text-sm sm:text-lg font-medium mb-2 ${
                         darkMode ? "text-gray-300" : "text-gray-700"
                       }`}
                     >
@@ -744,7 +750,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                       </button>
                     </p>
                     <p
-                      className={`text-sm ${
+                      className={`text-xs sm:text-sm ${
                         darkMode ? "text-gray-400" : "text-gray-500"
                       }`}
                     >
@@ -755,9 +761,9 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                 {isUploading && (
                   <div className="absolute inset-0 bg-white/90 dark:bg-gray-900/90 flex items-center justify-center rounded-xl backdrop-blur-sm">
                     <div className="text-center">
-                      <div className="w-16 h-16 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin mx-auto mb-4"></div>
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin mx-auto mb-3 sm:mb-4"></div>
                       <p
-                        className={`text-md font-medium ${
+                        className={`text-sm sm:text-md font-medium ${
                           darkMode ? "text-gray-300" : "text-gray-700"
                         }`}
                       >
@@ -782,7 +788,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
             <section>
               <label
                 htmlFor="post-title"
-                className={`block text-lg font-semibold mb-3 ${
+                className={`block text-base sm:text-lg font-semibold mb-2 sm:mb-3 ${
                   darkMode ? "text-gray-200" : "text-gray-800"
                 }`}
               >
@@ -795,7 +801,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                 onChange={(e) =>
                   setEditedPost((prev) => ({ ...prev, title: e.target.value }))
                 }
-                className={`w-full px-5 py-3 text-3xl font-bold font-playfair rounded-lg border transition-all duration-200 focus:outline-none focus:ring-3 focus:ring-teal-500 focus:border-transparent ${
+                className={`w-full px-4 sm:px-5 py-2 sm:py-3 text-xl sm:text-3xl font-bold font-playfair rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 sm:focus:ring-3 focus:ring-teal-500 focus:border-transparent ${
                   darkMode
                     ? "bg-gray-800 border-gray-600 text-white placeholder-gray-500"
                     : "bg-white border-gray-300 text-gray-900 placeholder-gray-400"
@@ -808,12 +814,12 @@ export default function SingleBlogPage({ params: paramsPromise }) {
             <section>
               <label
                 htmlFor="post-content"
-                className={`block text-lg font-semibold mb-3 ${
+                className={`block text-base sm:text-lg font-semibold mb-2 sm:mb-3 ${
                   darkMode ? "text-gray-200" : "text-gray-800"
                 }`}
               >
                 Content{" "}
-                <span className="text-sm font-normal">
+                <span className="text-xs sm:text-sm font-normal">
                   (Markdown supported)
                 </span>
               </label>
@@ -828,11 +834,11 @@ export default function SingleBlogPage({ params: paramsPromise }) {
               />
             </section>
 
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <section className="grid grid-cols-1 gap-4 sm:gap-6">
               <div>
                 <label
                   htmlFor="post-author"
-                  className={`block text-lg font-semibold mb-3 ${
+                  className={`block text-base sm:text-lg font-semibold mb-2 sm:mb-3 ${
                     darkMode ? "text-gray-200" : "text-gray-800"
                   }`}
                 >
@@ -848,7 +854,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                       author: e.target.value,
                     }))
                   }
-                  className={`w-full px-4 py-2 rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
+                  className={`w-full px-3 sm:px-4 py-2 rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
                     darkMode
                       ? "bg-gray-800 border-gray-600 text-white placeholder-gray-500"
                       : "bg-white border-gray-300 text-gray-900 placeholder-gray-400"
@@ -859,7 +865,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
               <div>
                 <label
                   htmlFor="publish-date"
-                  className={`block text-lg font-semibold mb-3 ${
+                  className={`block text-base sm:text-lg font-semibold mb-2 sm:mb-3 ${
                     darkMode ? "text-gray-200" : "text-gray-800"
                   }`}
                 >
@@ -881,7 +887,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                       publishDate: e.target.value,
                     }))
                   }
-                  className={`w-full px-4 py-2 rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
+                  className={`w-full px-3 sm:px-4 py-2 rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
                     darkMode
                       ? "bg-gray-800 border-gray-600 text-white placeholder-gray-500"
                       : "bg-white border-gray-300 text-gray-900 placeholder-gray-400"
@@ -893,7 +899,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
             <section>
               <label
                 htmlFor="post-category"
-                className={`block text-lg font-semibold mb-3 ${
+                className={`block text-base sm:text-lg font-semibold mb-2 sm:mb-3 ${
                   darkMode ? "text-gray-200" : "text-gray-800"
                 }`}
               >
@@ -908,7 +914,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                     category: e.target.value,
                   }))
                 }
-                className={`w-full px-4 py-2 rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
+                className={`w-full px-3 sm:px-4 py-2 rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
                   darkMode
                     ? "bg-gray-800 border-gray-600 text-white"
                     : "bg-white border-gray-300 text-gray-900"
@@ -928,12 +934,12 @@ export default function SingleBlogPage({ params: paramsPromise }) {
             <section>
               <label
                 htmlFor="post-tags"
-                className={`block text-lg font-semibold mb-3 ${
+                className={`block text-base sm:text-lg font-semibold mb-2 sm:mb-3 ${
                   darkMode ? "text-gray-200" : "text-gray-800"
                 }`}
               >
                 Tags{" "}
-                <span className="text-sm font-normal">
+                <span className="text-xs sm:text-sm font-normal">
                   (click to add/remove)
                 </span>
               </label>
@@ -941,10 +947,9 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                 {availableTags.map((tag) => (
                   <button
                     key={tag}
-                    type="button" // Important to prevent form submission
+                    type="button"
                     onClick={() => handleTagToggle(tag)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
-                      // Check if the tag is in editedPost.tags
+                    className={`px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors duration-200 ${
                       editedPost?.tags?.includes(tag)
                         ? "bg-teal-600 text-white shadow-md"
                         : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-teal-100 dark:hover:bg-teal-700/50 hover:text-teal-600 dark:hover:text-teal-400"
@@ -957,8 +962,8 @@ export default function SingleBlogPage({ params: paramsPromise }) {
             </section>
           </div>
         ) : (
-          <article className="prose prose-lg max-w-none mx-auto">
-            <div className="relative h-96 overflow-hidden rounded-2xl mb-8 shadow-xl">
+          <article className="prose prose-sm sm:prose-lg max-w-none mx-auto">
+            <div className="relative h-64 sm:h-96 overflow-hidden rounded-2xl mb-6 sm:mb-8 shadow-xl">
               <Image
                 src={post.imageUrl || "/placeholder.svg"}
                 alt={post.title}
@@ -966,33 +971,33 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                 style={{ objectFit: "cover" }}
                 className="rounded-2xl"
                 priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 800px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              <div className="absolute bottom-6 left-6">
+              <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6">
                 {post.category && (
-                  <span className="px-4 py-2 bg-teal-600 text-white text-md font-semibold rounded-full shadow-lg">
+                  <span className="px-3 sm:px-4 py-1 sm:py-2 bg-teal-600 text-white text-sm sm:text-md font-semibold rounded-full shadow-lg">
                     {post.category}
                   </span>
                 )}
               </div>
             </div>
 
-            <header className="mb-8">
+            <header className="mb-6 sm:mb-8">
               <h1
-                className={`text-4xl sm:text-5xl font-bold font-playfair ${
+                className={`text-3xl sm:text-4xl md:text-5xl font-bold font-playfair ${
                   darkMode ? "text-white" : "text-gray-900"
-                } mb-4 leading-tight`}
+                } mb-3 sm:mb-4 leading-tight`}
               >
                 {post.title}
               </h1>
-              <div className="flex flex-wrap items-center gap-6 text-gray-600 dark:text-gray-400 mb-6">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base">
                 <div
                   className={`flex items-center space-x-2 ${
                     darkMode ? "text-gray-300" : "text-gray-700"
                   }`}
                 >
-                  <User className="w-5 h-5 text-teal-500" />
+                  <User className="w-4 h-4 sm:w-5 sm:h-5 text-teal-500" />
                   <span className="font-medium">{post.author}</span>
                 </div>
                 <div
@@ -1000,7 +1005,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                     darkMode ? "text-gray-300" : "text-gray-700"
                   }`}
                 >
-                  <Calendar className="w-5 h-5 text-teal-500" />
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-teal-500" />
                   <span>{formatDate(post.createdAt)}</span>
                 </div>
               </div>
@@ -1009,9 +1014,9 @@ export default function SingleBlogPage({ params: paramsPromise }) {
                   post.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center px-3 py-1 text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full shadow-sm"
+                      className="inline-flex items-center px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full shadow-sm"
                     >
-                      <Tag className="w-3 h-3 mr-1 text-teal-500" />
+                      <Tag className="w-3 h-3 sm:w-3 sm:h-3 mr-1 text-teal-500" />
                       {tag}
                     </span>
                   ))}
@@ -1036,19 +1041,21 @@ export default function SingleBlogPage({ params: paramsPromise }) {
       <footer
         className={`${
           darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-        } border-t mt-16 py-8 shadow-inner`}
+        } border-t mt-12 sm:mt-16 py-6 sm:py-8 shadow-inner`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <Link
               href="/"
-              className="inline-flex items-center space-x-2 mb-4 group"
+              className="inline-flex items-center space-x-2 mb-3 sm:mb-4 group"
             >
-              <div className="w-9 h-9 bg-teal-600 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                <span className="text-white font-extrabold text-xl">B</span>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-teal-600 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                <span className="text-white font-extrabold text-lg sm:text-xl">
+                  B
+                </span>
               </div>
               <span
-                className={`text-2xl font-bold font-playfair ${
+                className={`text-xl sm:text-2xl font-bold font-playfair ${
                   darkMode ? "text-teal-400" : "text-teal-600"
                 } transition-colors duration-200`}
               >
@@ -1058,7 +1065,7 @@ export default function SingleBlogPage({ params: paramsPromise }) {
             <p
               className={`${
                 darkMode ? "text-gray-400" : "text-gray-600"
-              } text-sm`}
+              } text-xs sm:text-sm`}
             >
               © {new Date().getFullYear()} BlogSpace. All rights reserved.
             </p>
