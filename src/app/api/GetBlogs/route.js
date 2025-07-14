@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import connectDb from "../../../lib/db"; 
 import BlogModel from "../../../schema/BlogSchema";
 
-export async function GET(request) {
+export async function GET() {
     try {
         await connectDb();  
 
